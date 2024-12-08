@@ -1,0 +1,3 @@
+"""
+Digital Bookstore application package.
+"""
