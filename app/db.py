@@ -1,11 +1,15 @@
 """
-Database configuration and initialization module.
+Database initialization and configuration.
 """
 from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
 
 def init_db():
-    """Initialize the database and create all tables."""
+    """Initialize the database by creating all tables."""
+    # Import models here to avoid circular imports
     from . import models
-    db.create_all()
+    
+    # Create all tables
+    db.drop_all()  # Drop existing tables
+    db.create_all()  # Create new tables with updated schema

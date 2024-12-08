@@ -5,12 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Digital Bookstore{% endblock %}</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/cards.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/filters.css') }}">
     {% block extra_css %}{% endblock %}
 </head>
 <body>
     <nav>
         <div class="nav-content">
-            <a href="{{ url_for('home') }}" class="logo">Digital Bookstore</a>
+            <a href="{{ url_for('main.home') }}" class="logo">Digital Bookstore</a>
         </div>
     </nav>
 
@@ -19,5 +21,6 @@
     </main>
 
     {% block scripts %}{% endblock %}
+    <script src="{{ url_for('static', filename='js/stars.js') }}"></script>
 </body>
 </html>

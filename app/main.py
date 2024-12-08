@@ -6,6 +6,7 @@ from flask import Flask, render_template
 from dotenv import load_dotenv
 import os
 from app.db import db, init_db
+from app.routes.main_routes import main
 
 # Load environment variables
 load_dotenv()
@@ -25,10 +26,8 @@ def create_app():
     with app.app_context():
         init_db()
     
-    # Register routes
-    @app.route('/')
-    def home():
-        return render_template('main.html')
+    # Register blueprints
+    app.register_blueprint(main)
     
     return app
 

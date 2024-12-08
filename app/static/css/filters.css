@@ -35,3 +35,69 @@
 .filter-button:hover {
     background-color: #0056b3;
 }
+
+/* Filter Column Styles */
+.filter-column {
+    width: 250px;
+    flex-shrink: 0;
+    padding: 20px;
+    background: var(--background-color);
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.search-section {
+    margin-bottom: 20px;
+}
+
+.search-form {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.search-input {
+    width: 100%;
+    padding: 10px 40px 10px 12px;
+    border: 1px solid #E2E8F0;
+    border-radius: 4px;
+    font-size: 16px;
+    line-height: 1.5;
+    transition: all 0.2s;
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px rgba(49,130,206,0.2);
+}
+
+.search-button {
+    position: absolute;
+    right: 8px;
+    background: none;
+    border: none;
+    padding: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.search-button:focus {
+    outline: 2px solid var(--primary-color);
+    border-radius: 4px;
+}
+
+.search-icon {
+    width: 20px;
+    height: 20px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .filter-column {
+        width: 100%;
+        margin-bottom: 20px;
+    }
+}
