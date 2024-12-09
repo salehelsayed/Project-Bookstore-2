@@ -9,21 +9,15 @@ from app.models import Book
 from app.db import db
 
 def seed_database():
-    """Seed the database with data from books_data.csv."""
-    app = create_app()
-    
-    with app.app_context():
-        # Check if database is already populated
-        if Book.query.first() is not None:
-            print("Database already contains books. Skipping seeding.")
-            return
-
-        csv_path = os.path.join('data', 'books_data.csv')
-        if not os.path.exists(csv_path):
-            print(f"Error: {csv_path} not found!")
-            return
-
-        try:
+    """
+    Seed the database with initial book data from books_data.csv.
+    This function is called when the application starts if the database is empty.
+    """
+    if Book.query.first() is None:
+        csv_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 
+                               'data', 'books_data.csv')
+        
+        if os.path.exists(csv_path):
             with open(csv_path, 'r', encoding='utf-8') as f:
                 csv_reader = csv.DictReader(f)
                 for row in csv_reader:
@@ -33,20 +27,13 @@ def seed_database():
                         category=row['category'],
                         language=row['language'],
                         description=row['description'],
-                        path=row['file_path'],
-                        cover_path=row['image_path'],
-                        rating=float(row['rating']),
-                        reviews_count=int(row['reviews_count'])
+                        file_path=row['file_path'],
+                        image_path=row['image_path'],
+                        rating=float(row['rating']) if row['rating'] else None,
+                        reviews_count=int(row['reviews_count']) if row['reviews_count'] else 0
                     )
                     db.session.add(book)
-                    print(f"Added book: {book.title} by {book.author}")
-                
                 db.session.commit()
-                print("Database seeding completed successfully!")
-        
-        except Exception as e:
-            print(f"Error seeding database: {str(e)}")
-            db.session.rollback()
 
 if __name__ == '__main__':
     seed_database()

@@ -33,8 +33,8 @@ def seed_database():
                         category=row['category'],
                         language=row['language'],
                         description=row['description'],
-                        path=row['file_path'],
-                        cover_path=row['image_path'],
+                        file_path=row['file_path'],
+                        image_path=row['image_path'],
                         rating=float(row['rating']),
                         reviews_count=int(row['reviews_count'])
                     )
@@ -44,22 +44,23 @@ def seed_database():
 @main.route('/')
 def home():
     """
-    Display the homepage with initial book listing and filters.
-    
-    The homepage shows a grid of books with search functionality.
-    Books can be filtered by:
-    - Search query (matches title or author)
-    - Category
-    - Language
-    
+    Display the homepage with book listings and filters.
+
+    Supports filtering by:
+    - Search query: Matches title or author.
+    - Language: Filters books by selected language.
+    - Rating: Filters books with a rating greater than or equal to the selected rating.
+
     Returns:
-        Rendered template with books and filter options
+        Rendered HTML template for the homepage.
     """
     # Initialize database if empty
     seed_database()
     
     # Get query parameters
     search_query = request.args.get('search', '').strip()
+    language = request.args.get('language', '').strip()
+    rating = request.args.get('rating', '').strip()
     page = request.args.get('page', 1, type=int)
     per_page = 12  # Number of books per page
     
@@ -71,7 +72,13 @@ def home():
             (Book.title.ilike(f'%{search_query}%')) |
             (Book.author.ilike(f'%{search_query}%'))
         )
-    
+    if language:
+        # Filter books by the selected language
+        query = query.filter(Book.language == language)
+    if rating:
+        # Filter books with a rating greater than or equal to the selected rating
+        query = query.filter(Book.rating >= float(rating))
+
     # Execute query with pagination
     pagination = query.paginate(page=page, per_page=per_page, error_out=False)
     books = pagination.items
@@ -80,19 +87,21 @@ def home():
     static_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'static')
     
     for book in books:
-        if book.cover_path:
-            # Ensure the cover_path doesn't start with 'static/'
-            if book.cover_path.startswith('static/'):
-                book.cover_path = book.cover_path[7:]  # Remove 'static/' prefix
+        if book.image_path:
+            # Ensure the image_path doesn't start with 'static/'
+            if book.image_path.startswith('static/'):
+                book.image_path = book.image_path[7:]  # Remove 'static/' prefix
             
             # Check if file exists
-            cover_fullpath = os.path.join(static_dir, book.cover_path)
+            cover_fullpath = os.path.join(static_dir, book.image_path)
             if not os.path.isfile(cover_fullpath):
-                book.cover_path = None
+                book.image_path = None
     
     return render_template('main.html',
                          books=books,
                          search_query=search_query,
+                         language=language,
+                         rating=rating,
                          current_page=page,
                          total_pages=pagination.pages)
 

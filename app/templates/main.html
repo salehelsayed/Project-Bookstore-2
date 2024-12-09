@@ -26,7 +26,60 @@
     <div class="content-wrapper">
         <!-- Filter Column -->
         <aside class="filter-column">
-            <!-- Additional filters can be added here -->
+            <div class="filter-card">
+                <h3 class="filter-title">Filters</h3>
+
+                <!-- Apply Filters Form -->
+                <form action="{{ url_for('main.home') }}" method="GET" class="apply-filters-form">
+                    <!-- Hidden fields to preserve search query if necessary -->
+                    {% if search_query %}
+                    <input type="hidden" name="search" value="{{ search_query }}">
+                    {% endif %}
+
+                    <!-- Language Filter -->
+                    <div class="filter-section">
+                        <label for="language-select" class="filter-label">Language</label>
+                        <select id="language-select" name="language" class="filter-select">
+                            <option value="">All Languages</option>
+                            <option value="English" {% if language == 'English' %}selected{% endif %}>English</option>
+                            <option value="Arabic" {% if language == 'Arabic' %}selected{% endif %}>Arabic</option>
+                            <option value="Spanish" {% if language == 'Spanish' %}selected{% endif %}>Spanish</option>
+                            <!-- Add more languages as needed -->
+                        </select>
+                    </div>
+
+                    <!-- Rating Filter -->
+                    <div class="filter-section">
+                        <span class="filter-label">Rating</span>
+                        <label class="rating-option">
+                            <input type="radio" name="rating" value="5" {% if rating == '5' %}checked{% endif %}>
+                            <span class="stars">★★★★★</span>
+                        </label>
+                        <label class="rating-option">
+                            <input type="radio" name="rating" value="4" {% if rating == '4' %}checked{% endif %}>
+                            <span class="stars">★★★★☆</span>
+                        </label>
+                        <label class="rating-option">
+                            <input type="radio" name="rating" value="3" {% if rating == '3' %}checked{% endif %}>
+                            <span class="stars">★★★☆☆</span>
+                        </label>
+                    </div>
+
+                    <!-- Future Filters (Top Downloads, Most Discussed) -->
+                    <div class="filter-section future-filters">
+                        <span class="filter-label">Additional Filters</span>
+                        <div class="disabled-filter">
+                            <span class="filter-name">Top Downloads (Coming Soon)</span>
+                        </div>
+                        <div class="disabled-filter">
+                            <span class="filter-name">Most Discussed (Coming Soon)</span>
+                        </div>
+                    </div>
+
+                    <!-- Apply Filters Button -->
+                    <button type="submit" class="btn apply-filters-btn" aria-label="Apply Filters">Apply Filters</button>
+                </form>
+            </div>
         </aside>
 
         <!-- Book Grid -->
