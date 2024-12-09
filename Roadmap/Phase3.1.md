@@ -1,20 +1,26 @@
-Summary of Actions:
-Update main.html: Incorporate the HTML code for the filter component as shown in Phase3.1.md.
-Create/Modify filters.css: Add the CSS styles to style the filter component, ensuring it matches the aesthetic of your application.
-Modify main_routes.py: Update the route handling to accept and process the filter parameters (language and rating) from the GET request when the "Apply Filters" button is pressed.
-Ensure Book Model Supports Filtering: Verify that the Book model has the necessary fields and that you can query books based on language and rating.
+# Phase 3.1: Implement Filter Sidebar on Homepage
+
+**Summary of Actions:**
+
+- **Update `main.html`**: Incorporate the HTML code for the filter component as shown in Phase3.1.md. **[+]**
+
+- **Create/Modify `filters.css`**: Add the CSS styles to style the filter component, ensuring it matches the aesthetic of your application. **[+]**
+
+- **Modify `main_routes.py`**: Update the route handling to accept and process the filter parameters (language and rating) from the GET request when the "Apply Filters" button is pressed. **[+]**
+
+- **Ensure `Book` Model Supports Filtering**: Verify that the `Book` model has the necessary fields and that you can query books based on `language` and `rating`. **[+]**
 
 Below is a refined approach that incorporates your requests:
 
 - Use simpler, well-known terms for the filters:  
-  - **Language** remains the same (clear and universal).
-  - **Rating** remains the same (users understand star ratings).
-  - **Most Downloaded** → **Top Downloads** (communicates popularity by download count).
-  - **Most Chatted** → **Most Discussed** (communicates popularity by how much it’s talked about).
+  - **Language** remains the same (clear and universal). **[+]**
+  - **Rating** remains the same (users understand star ratings). **[+]**
+  - **Most Downloaded** → **Top Downloads** (communicates popularity by download count). **[+]**
+  - **Most Chatted** → **Most Discussed** (communicates popularity by how much it’s talked about). **[+]**
 
-- Only **Language** and **Rating** will be included in the "Apply Filters" request for now, since you haven’t implemented **Top Downloads** and **Most Discussed** in the database yet.
+- Only **Language** and **Rating** will be included in the "Apply Filters" request for now, since you haven’t implemented **Top Downloads** and **Most Discussed** in the database yet. **[+]**
   
-- Make the **"Apply Filters"** button use the same accent color as your brand color (assuming the blue used for other UI elements) and add a subtle shadow to the filter card for a cleaner, modern look.
+- Make the **"Apply Filters"** button use the same accent color as your brand color (assuming the blue used for other UI elements) and add a subtle shadow to the filter card for a cleaner, modern look. **[+]**
 
 ### Example Implementation
 
@@ -174,17 +180,17 @@ Below is a refined approach that incorporates your requests:
 ### Explanation
 
 - **Unified Color and Aesthetics:**  
-  The "Apply Filters" button now matches the accent blue color used across your UI elements. This ensures consistency and a cohesive brand feeling.
+  The "Apply Filters" button now matches the accent blue color used across your UI elements. This ensures consistency and a cohesive brand feeling. **[+]**
   
 - **Future Filters (Top Downloads, Most Discussed):**  
-  We’ve listed them as “Coming Soon” and grayed them out. Since they are not implemented, they have no `name` attribute and won’t be included in the GET request. They serve as a placeholder to inform users that more filters will be available later.
+  We’ve listed them as “Coming Soon” and grayed them out. Since they are not implemented, they have no `name` attribute and won’t be included in the GET request. They serve as a placeholder to inform users that more filters will be available later. **[+]**
   
 - **User-Friendly Terminology:**  
-  - “Language” and “Rating” are straightforward.  
-  - “Top Downloads” and “Most Discussed” are simple, descriptive terms that convey their purpose.
+  - “Language” and “Rating” are straightforward. **[+]**
+  - “Top Downloads” and “Most Discussed” are simple, descriptive terms that convey their purpose. **[+]**
 
 - **Simple UI with Clear Hierarchy:**  
-  The card has a title (“Filters”), each filter category is labeled clearly, and the “Apply Filters” button stands out at the bottom. The subtle box shadow adds a touch of depth to the filter card, making it visually distinct from the background.
+  The card has a title (“Filters”), each filter category is labeled clearly, and the “Apply Filters” button stands out at the bottom. The subtle box shadow adds a touch of depth to the filter card, making it visually distinct from the background. **[+]**
 
 **Result:**  
 You get a cleaner, more intuitive filter panel with the currently functional filters (Language and Rating) clearly available and more advanced filtering options (Top Downloads, Most Discussed) foreshadowed without clutter or user confusion.

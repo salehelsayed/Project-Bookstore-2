@@ -7,10 +7,11 @@ This module handles the main routes for the bookstore application, including:
 - Database seeding from CSV data
 """
 import csv
-from flask import Blueprint, render_template, request
+from flask import Blueprint, render_template, request, send_file, abort, current_app
 from app.models import Book
 from app.db import db
 import os
+from werkzeug.utils import safe_join
 
 main = Blueprint('main', __name__)
 
@@ -110,3 +111,35 @@ def list_books():
     """List all books in the library."""
     books = Book.query.all()
     return render_template('main.html', books=books)
+
+@main.route('/book/<int:book_id>/download')
+def download_book(book_id):
+    # Get the book from the database
+    book = Book.query.get(book_id)
+    if not book:
+        abort(404, "Book not found")
+    
+    # Remove leading slashes from file path
+    file_path = book.file_path.lstrip('/')
+    
+    # Get the storage directory from app config
+    storage_dir = current_app.config['STORAGE_DIR']
+    
+    # Construct the absolute path to the PDF file
+    pdf_path = safe_join(storage_dir, file_path)
+    
+    if pdf_path is None:
+        abort(400, "Invalid file path")
+    
+    # Convert to absolute path
+    pdf_path = os.path.abspath(pdf_path)
+    
+    # Print the path for debugging (remove in production)
+    print(f"Attempting to access PDF at: {pdf_path}")
+    
+    # Check if the file exists
+    if not os.path.isfile(pdf_path):
+        abort(404, "File not found")
+    
+    # Return the file as an attachment
+    return send_file(pdf_path, as_attachment=True, download_name=os.path.basename(pdf_path))
