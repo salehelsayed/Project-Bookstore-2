@@ -1,0 +1,187 @@
+/* Styles for book filtering components */
+.filters-container {
+    padding: 1rem;
+    background-color: #f8f9fa;
+    border-radius: 4px;
+    margin-bottom: 1rem;
+}
+
+.filter-group {
+    margin-bottom: 1rem;
+}
+
+.filter-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+}
+
+.filter-input {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+}
+
+.filter-button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.filter-button:hover {
+    background-color: #0056b3;
+}
+
+/* Filter Column Styles */
+.filter-column {
+    width: 250px;
+    flex-shrink: 0;
+    padding: 20px;
+    background: var(--background-color);
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.search-section {
+    margin-bottom: 20px;
+}
+
+.search-form {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.search-input {
+    width: 100%;
+    padding: 10px 40px 10px 12px;
+    border: 1px solid #E2E8F0;
+    border-radius: 4px;
+    font-size: 16px;
+    line-height: 1.5;
+    transition: all 0.2s;
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px rgba(49,130,206,0.2);
+}
+
+.search-button {
+    position: absolute;
+    right: 8px;
+    background: none;
+    border: none;
+    padding: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.search-button:focus {
+    outline: 2px solid var(--primary-color);
+    border-radius: 4px;
+}
+
+.search-icon {
+    width: 20px;
+    height: 20px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .filter-column {
+        width: 100%;
+        margin-bottom: 20px;
+    }
+}
+
+.filter-card {
+    background: #fff;
+    border-radius: 6px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Subtle shadow */
+    padding: 16px;
+}
+
+.filter-title {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 12px;
+    border-bottom: 1px solid #E2E8F0;
+    padding-bottom: 8px;
+}
+
+.filter-section {
+    margin-bottom: 16px;
+}
+
+.filter-label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #2D3748; /* Dark gray for text */
+}
+
+.filter-select {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #CBD5E0;
+    border-radius: 4px;
+    font-size: 14px;
+    color: #2D3748;
+}
+
+.rating-option {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.rating-option input[type=radio] {
+    margin-right: 8px;
+}
+
+.stars {
+    font-size: 14px;
+    color: #FFD700; /* Gold for stars */
+}
+
+.future-filters .disabled-filter {
+    color: #A0AEC0; /* Gray text indicating not active */
+    font-size: 14px;
+    margin-bottom: 8px;
+}
+
+.apply-filters-form {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.apply-filters-btn {
+    background-color: #3182CE; /* Accent blue */
+    color: #fff;
+    font-size: 14px;
+    font-weight: 500;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 100%;
+    text-align: center;
+}
+
+.apply-filters-btn:hover {
+    background-color: #2C5282;
+}
+
+.apply-filters-btn:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(49,130,206,0.4);
+}

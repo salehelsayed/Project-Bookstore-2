@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block title %}Chat - {{ book_title }}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/chat.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="chat-container">
+    <div class="sidebar">
+        <h2 class="book-title">{{ book_title }}</h2>
+        <button class="toggle-sidebar" id="toggleSidebar">Hide Sidebar</button>
+    </div>
+    <div class="chat-window">
+        <div class="messages" id="messages">
+            <div class="message ai-message">
+                Hello! I'm your book assistant. How can I help you with "{{ book_title }}"?
+            </div>
+        </div>
+        <form class="chat-input-form" id="chatForm">
+            <input type="text" name="user_query" class="chat-input" placeholder="Ask any question about the book...">
+            <button type="submit" class="chat-send-btn">Send</button>
+        </form>
+    </div>
+    <div class="vertical-resizer" id="vertical-resizer"></div>
+    <div class="pdf-viewer">
+        <iframe src="{{ pdf_url }}#view=Fit" class="pdf-frame"></iframe>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/chat.js') }}"></script>
+{% endblock %}
