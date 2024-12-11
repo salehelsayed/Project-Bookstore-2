@@ -1,0 +1,3 @@
+1|Intro to Cybersecurity|Ministry Of DG|Cybersecurity|English|An introduction to cybersecurity principles|TechPress|978-3-16-148410-0|2020-05-10|300|4.5|1234|storage/books/Cybersecurity/Cybersecurity-Handbook-English-version.pdf|storage/books/Cybersecurity/book_cover.png|93|89
+
+2|Advanced Language Studies|Gamal Hassanen|Language|Arabic|Meanings in Arabic Language|LinguaHouse|978-1-23-456789-0|2021-01-15|400|4.0|560|storage/books/Language/20_Fikh-AlMa3na.pdf||27|131

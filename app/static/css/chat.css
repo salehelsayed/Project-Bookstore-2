@@ -1,11 +1,21 @@
+/* Base styles */
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
 /* Chat container with flex layout */
 .chat-container {
     display: flex;
     height: 100vh;
     width: 100%;
     background-color: #f0f2f5;
-    overflow: hidden;
-    position: relative;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
     user-select: none;
 }
 
@@ -109,6 +119,10 @@
     border: 1px solid #E2E8F0;
     border-radius: 4px;
     font-size: 1rem;
+    resize: none; /* Prevent user from manually resizing */
+    line-height: 1.5;
+    max-height: 150px; /* Example max height */
+    overflow-y: auto;  /* Show scrollbar if content exceeds max-height */
 }
 
 .chat-send-btn {
