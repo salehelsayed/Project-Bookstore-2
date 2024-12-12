@@ -1,26 +1,24 @@
-"""
-OpenAI integration utilities.
-"""
+# openai_utils.py
 import os
-from openai import OpenAI
+from langchain.chains import RetrievalQA
+from flask import current_app
 
-client = OpenAI(api_key=os.getenv('OPENAI_API_KEY'))
-
-def get_chat_response(message: str) -> str:
+def get_chat_response(query: str, qa_chain: RetrievalQA) -> str:
     """
-    Get a response from OpenAI's chat model.
+    Given a user query and a RetrievalQA chain, get a response from the LLM.
     
     Args:
-        message (str): User's input message
-        
+        query (str): The user's question.
+        qa_chain (RetrievalQA): The QA chain with LLM and vectorstore integrated.
+
     Returns:
-        str: AI-generated response
+        str: The AI-generated answer.
     """
-    try:
-        response = client.chat.completions.create(
-            model="gpt-3.5-turbo",
-            messages=[{"role": "user", "content": message}]
-        )
-        return response.choices[0].message.content
-    except Exception as e:
-        return f"Error getting response: {str(e)}"
+    # Debug the API key
+    api_key = current_app.config.get('OPENAI_API_KEY')
+    print(f"Debug - API Key in get_chat_response: {api_key[:10] if api_key else 'None'}...")
+    
+    response = qa_chain.invoke({"query": query})
+    return response["result"]
+
+

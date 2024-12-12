@@ -7,7 +7,7 @@ This module handles the main routes for the bookstore application, including:
 - Database seeding from CSV data
 """
 import csv
-from flask import Blueprint, render_template, request, send_file, abort, current_app, url_for
+from flask import Blueprint, render_template, request, send_file, abort, current_app, url_for, session
 from app.models import Book
 from app.db import db
 import os
@@ -152,8 +152,26 @@ def chat(book_id):
 
     # Extract book details
     book_title = book.title
-    file_path = book.file_path
+    file_path = book.file_path  # e.g., 'app/static/storage/books/Cybersecurity/Cybersecurity-Handbook-English-version.pdf'
+
+    # For iframe display
     relative_path = file_path.replace("app/static/", "")
     pdf_url = url_for('static', filename=relative_path)
+
+    # Correctly determine the actual book_directory on disk for Chroma
+    storage_dir = current_app.config['STORAGE_DIR']  # Should point to 'app/static'
+    # Remove 'app/static/' from file_path before joining
+    fixed_file_path = file_path.replace('app/static/', '')
+    abs_pdf_path = os.path.abspath(os.path.join(storage_dir, fixed_file_path))
+    book_directory = os.path.dirname(abs_pdf_path)
+
+    # Debug prints to confirm paths
+    print(f"Debug - file_path: {file_path}")
+    print(f"Debug - storage_dir: {storage_dir}")
+    print(f"Debug - fixed_file_path: {fixed_file_path}")
+    print(f"Debug - abs_pdf_path: {abs_pdf_path}")
+    print(f"Debug - book_directory: {book_directory}")
+
+    session['book_directory'] = book_directory
 
     return render_template('chat.html', book_title=book_title, pdf_url=pdf_url)
