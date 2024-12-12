@@ -161,7 +161,8 @@ if __name__ == "__main__":
             "language": language,
             "domain": domain,
             "start_page": start_page_chunk,
-            "end_page": end_page_chunk
+            "end_page": end_page_chunk,
+            "page": start_page_chunk
         })
 
     print(f"Created {len(final_chunks)} chunks.")

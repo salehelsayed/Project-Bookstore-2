@@ -3,7 +3,7 @@ import os
 from typing import List
 from sentence_transformers import SentenceTransformer
 from langchain.embeddings.base import Embeddings
-from langchain_openai import OpenAI
+from langchain_openai import ChatOpenAI
 from langchain.chains import RetrievalQA
 from langchain_chroma import Chroma
 from langchain.prompts import PromptTemplate
@@ -20,16 +20,6 @@ class SentenceTransformerEmbeddings(Embeddings):
         return self.model.encode(texts).tolist()
 
 def get_qa_chain(chroma_db_path: str, collection_name: str):
-    """
-    Given a chroma_db_path and a collection_name, return a RetrievalQA chain.
-    
-    Args:
-        chroma_db_path (str): Path to the chroma_db directory
-        collection_name (str): Name of the collection, usually the book directory name
-
-    Returns:
-        RetrievalQA: The constructed QA chain
-    """
     embeddings = SentenceTransformerEmbeddings()
 
     vectorstore = Chroma(
@@ -44,24 +34,63 @@ def get_qa_chain(chroma_db_path: str, collection_name: str):
     docs = retriever.get_relevant_documents(test_query)
     print(f"Debug - Retrieving docs for test query '{test_query}': {docs}")
 
-    template = """You are a helpful assistant. Use the following pieces of context to answer the question at the end.
-If you don't know the answer, just say so.
+    # System instruction included at top of both templates
+    # system_instruction = "Act as an expert. Reply to questions about this document. Self-reflect on your answers."
+    system_instruction = (
+    "You are a friendly, expert assistant. "
+    "First, read the user’s query and the provided context carefully and reason silently before writing your final answer. "
+    "When formulating your response, use Markdown to present information clearly. "
+    "If the response benefits from headings, bullet points, or code blocks, include them. "
+    "If the user’s question is unclear, ask for clarification rather than making unfounded assumptions."
+)
 
+    template = f"""{system_instruction}
 Context:
-{context}
+{{context}}
 
-Question: {question}
+Question: {{question}}
+"""
+    
+
+    refine_template = f"""{system_instruction}
+Refine the original answer based on additional context.
+
+Existing answer:
+{{existing_answer}}
+
+Additional context:
+{{context}}
+
+Question: {{question}}
 """
     PROMPT = PromptTemplate(template=template, input_variables=["context", "question"])
+    REFINE_PROMPT = PromptTemplate(
+        template=refine_template,
+        input_variables=["existing_answer", "context", "question"]
+    )
 
     openai_api_key = current_app.config.get('OPENAI_API_KEY')
     print(f"Debug - Using API key (first 10 chars): {openai_api_key[:10] if openai_api_key else 'None'}")
 
+    # Initialize ChatOpenAI without prefix_messages
+    llm = ChatOpenAI(
+        api_key=openai_api_key,
+        model_name="gpt-4o-mini",
+        temperature=0.3,
+        max_tokens=1200,
+        streaming=True
+    )
+
     qa = RetrievalQA.from_chain_type(
-        llm=OpenAI(api_key=openai_api_key, temperature=0),
-        chain_type="stuff",
+        llm=llm,
+        chain_type="refine",
         retriever=retriever,
-        chain_type_kwargs={"prompt": PROMPT}
+        chain_type_kwargs={
+            "question_prompt": PROMPT,
+            "refine_prompt": REFINE_PROMPT,
+            "document_variable_name": "context"
+        },
+        return_source_documents=True
     )
 
     return qa

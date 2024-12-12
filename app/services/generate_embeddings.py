@@ -35,7 +35,8 @@ if __name__ == "__main__":
             "language": chunk_info.get("language", ""),
             "domain": chunk_info.get("domain", ""),
             "start_page": chunk_info.get("start_page", ""),
-            "end_page": chunk_info.get("end_page", "")
+            "end_page": chunk_info.get("end_page", ""),
+            "page": chunk_info.get("page", "")
         }
 
         documents.append(chunk_text)

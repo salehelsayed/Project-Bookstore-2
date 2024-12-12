@@ -224,3 +224,110 @@ main {
         height: 50vh;
     }
 }
+
+/* Markdown styles for messages */
+.messages p {
+    margin: 0.5rem 0;
+}
+
+.messages code {
+    background: #f8f8f8;
+    border-radius: 4px;
+    padding: 2px 4px;
+    font-family: Consolas, monospace;
+    font-size: 0.9em;
+}
+
+/* Code block styling */
+.messages pre {
+    background: #f8f8f8;
+    border-radius: 4px;
+    padding: 1rem;
+    overflow-x: auto;
+    margin: 0.5rem 0;
+}
+
+.messages pre code {
+    background: transparent;
+    padding: 0;
+}
+
+/* List styling */
+.messages ul, .messages ol {
+    margin: 0.5rem 0;
+    padding-left: 2rem;
+}
+
+.messages li {
+    margin: 0.25rem 0;
+}
+
+/* Table styling */
+.messages table {
+    border-collapse: collapse;
+    margin: 0.5rem 0;
+    width: 100%;
+}
+
+.messages th, .messages td {
+    border: 1px solid #ddd;
+    padding: 0.5rem;
+    text-align: left;
+}
+
+.messages th {
+    background-color: #f8f8f8;
+}
+
+/* Blockquote styling */
+.messages blockquote {
+    border-left: 4px solid #ddd;
+    margin: 0.5rem 0;
+    padding-left: 1rem;
+    color: #666;
+}
+
+/* Link styling */
+.messages a {
+    color: #0066cc;
+    text-decoration: none;
+}
+
+.messages a:hover {
+    text-decoration: underline;
+}
+
+.loading-spinner {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border: 2px solid #fff;
+    border-top: 2px solid #3182CE;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-left: 8px;
+    vertical-align: middle;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Reference styling */
+.references {
+    margin-top: 0.5rem;
+    font-size: 0.9em;
+    color: #666;
+}
+
+.ref-link {
+    color: #3182CE;
+    text-decoration: none;
+    margin: 0 0.25rem;
+    cursor: pointer;
+}
+
+.ref-link:hover {
+    text-decoration: underline;
+}

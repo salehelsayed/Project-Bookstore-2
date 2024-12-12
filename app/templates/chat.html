@@ -20,7 +20,10 @@
         </div>
         <form class="chat-input-form" id="chatForm">
             <textarea class="chat-input" name="user_query" rows="1" placeholder="Ask any question about the book..."></textarea>
-            <button type="submit" class="chat-send-btn">Send</button>
+            <button type="submit" class="chat-send-btn">
+                <span class="send-text">Send</span>
+                <span class="loading-spinner" style="display:none;"></span>
+            </button>
         </form>
     </div>
     <div class="vertical-resizer" id="vertical-resizer"></div>
@@ -31,5 +34,7 @@
 {% endblock %}
 
 {% block scripts %}
+<!-- Add Marked.js for Markdown parsing -->
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 <script src="{{ url_for('static', filename='js/chat.js') }}"></script>
 {% endblock %}

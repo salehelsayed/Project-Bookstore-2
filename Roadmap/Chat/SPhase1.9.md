@@ -1,6 +1,66 @@
+Below are step-by-step instructions and code snippets to achieve the desired functionality. We will:
+
+1. Show a "thinking" or "loading" state in the "Send" button while awaiting the server’s response.
+2. Display the AI's response character-by-character (simulate typing) instead of all at once.
+
+**Files Involved:**  
+- `chat.html` (to add a spinner icon or text in the send button markup)
+- `chat.css` (for spinner styling)
+- `chat.js` (to implement the logic for the spinner state and simulated typing)
+
+We assume the backend returns the full message after processing. Since we do not have true streaming from the server, we will simulate a typing effect after receiving the entire message.
+
+### 1. Add a Spinner or Loading Indicator to `chat.html`
+
+Add a placeholder element (e.g., `<span class="loading-spinner"></span>`) inside the send button that we can show/hide:
+
+```html
+<!-- In chat.html -->
+<form class="chat-input-form" id="chatForm">
+    <textarea class="chat-input" name="user_query" rows="1" placeholder="Ask any question about the book..."></textarea>
+    <button type="submit" class="chat-send-btn">
+        <span class="send-text">Send</span>
+        <span class="loading-spinner" style="display:none;"></span>
+    </button>
+</form>
+```
+
+### 2. Spinner CSS in `chat.css`
+
+Add styles for the `.loading-spinner`:
+
+```css
+.loading-spinner {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border: 2px solid #fff;
+    border-top: 2px solid #3182CE;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-left: 8px;
+    vertical-align: middle;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* While button is "thinking", 
+   you can also dim the send-text or hide it */
+```
+
+### 3. Adjust `chat.js` to Show Spinner and Simulate Typing
+
+- When the user sends a message, show the spinner and hide the "Send" text.
+- When the response returns, simulate typing by gradually appending characters to the message container.
+
+**Updated `chat.js`:**
+
+```javascript
 // Chat functionality
 document.addEventListener('DOMContentLoaded', function() {
-    // Chat elements
     const chatForm = document.getElementById('chatForm');
     const chatInput = document.querySelector('.chat-input');
     const messages = document.getElementById('messages');
@@ -11,10 +71,12 @@ document.addEventListener('DOMContentLoaded', function() {
     if (chatForm && chatInput && messages && sendBtn && sendText && spinner) {
         async function sendMessage(message) {
             try {
-                // Show loading state
+                // Disable send button to prevent multiple submissions
                 sendBtn.disabled = true;
                 sendBtn.style.opacity = '0.5';
                 sendBtn.style.cursor = 'not-allowed';
+
+                // Show spinner, hide "Send"
                 sendText.style.display = 'none';
                 spinner.style.display = 'inline-block';
 
@@ -26,108 +88,63 @@ document.addEventListener('DOMContentLoaded', function() {
                     body: JSON.stringify({ message }),
                 });
 
+                // After receiving response, hide spinner, show "Send" text
+                sendText.style.display = 'inline';
+                spinner.style.display = 'none';
+
                 if (!response.ok) throw new Error('Network response was not ok');
+                
                 const data = await response.json();
 
-                // Reset button state
+                // Re-enable the send button after response
                 sendBtn.disabled = false;
                 sendBtn.style.opacity = '1';
                 sendBtn.style.cursor = 'pointer';
-                sendText.style.display = 'inline';
-                spinner.style.display = 'none';
 
-                // Return both response and pages
-                return {
-                    response: data.response,
-                    pages: data.pages || []
-                };
+                return data.response;
             } catch (error) {
                 console.error('Error:', error);
-                // Reset button state on error
+
+                // Even if error occurs, re-enable send button
                 sendBtn.disabled = false;
                 sendBtn.style.opacity = '1';
                 sendBtn.style.cursor = 'pointer';
+
                 sendText.style.display = 'inline';
                 spinner.style.display = 'none';
 
-                return {
-                    response: 'Sorry, there was an error processing your message.',
-                    pages: []
-                };
+                return 'Sorry, there was an error processing your message.';
             }
         }
 
-        function simulateTypingEffect(aiMessage, pages = [], options = {speed: 1, batchSize: 10}) {
+        function simulateTypingEffect(aiMessage) {
             const messageDiv = document.createElement('div');
             messageDiv.classList.add('message', 'ai-message');
             messages.appendChild(messageDiv);
             messages.scrollTop = messages.scrollHeight;
 
-            // Extract options with defaults
-            const {
-                speed = 1,
-                batchSize = 500,
-                instant = false
-            } = options;
-
-            if (instant) {
-                const html = marked.parse(aiMessage);
-                messageDiv.innerHTML = html;
-                
-                // Add references if available
-                if (pages && pages.length > 0) {
-                    const refsDiv = document.createElement('div');
-                    refsDiv.classList.add('references');
-                    refsDiv.innerHTML = "<strong>References:</strong> " + 
-                        pages.map(page => 
-                            `<a href="#" class="ref-link" data-page="${page}">Page ${page}</a>`
-                        ).join(", ");
-                    messageDiv.appendChild(refsDiv);
-                }
-                
-                messages.scrollTop = messages.scrollHeight;
-                return;
-            }
-
             let index = 0;
+            const speed = 900000; // typing speed in ms
             const chars = aiMessage.split('');
 
             function typeChar() {
                 if (index < chars.length) {
-                    const nextChunk = chars.slice(index, index + batchSize).join('');
-                    messageDiv.textContent += nextChunk;
-                    index += batchSize;
+                    // Append next character as plain text
+                    messageDiv.textContent += chars[index];
+                    index++;
                     messages.scrollTop = messages.scrollHeight;
                     setTimeout(typeChar, speed);
                 } else {
-                    // Typing finished, now parse Markdown and add references
+                    // Typing finished, now parse Markdown
                     const finalText = messageDiv.textContent;
                     const html = marked.parse(finalText);
                     messageDiv.innerHTML = html;
-
-                    // Add references if available
-                    if (pages && pages.length > 0) {
-                        const refsDiv = document.createElement('div');
-                        refsDiv.classList.add('references');
-                        refsDiv.innerHTML = "<strong>References:</strong> " + 
-                            pages.map(page => 
-                                `<a href="#" class="ref-link" data-page="${page}">Page ${page}</a>`
-                            ).join(", ");
-                        messageDiv.appendChild(refsDiv);
-                    }
+                    // Now the message is shown with proper Markdown formatting
                 }
-            }
-            typeChar();
-        }
-        
+    }
+    typeChar();
+}
 
-        function appendMessageAsUser(message) {
-            const messageDiv = document.createElement('div');
-            messageDiv.classList.add('message', 'user-message');
-            messageDiv.textContent = message;
-            messages.appendChild(messageDiv);
-            messages.scrollTop = messages.scrollHeight;
-        }
 
         chatForm.addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -138,7 +155,7 @@ document.addEventListener('DOMContentLoaded', function() {
             chatInput.value = '';
 
             const response = await sendMessage(message);
-            simulateTypingEffect(response.response, response.pages);
+            simulateTypingEffect(response);
         });
 
         chatInput.addEventListener('keypress', (e) => {
@@ -149,32 +166,12 @@ document.addEventListener('DOMContentLoaded', function() {
         });
 
         chatInput.addEventListener('input', function() {
-            // Reset height to 'auto' to correctly measure the new scrollHeight
             this.style.height = 'auto';
-            
-            // Set the textarea's height to its scrollHeight (or maxed at max-height by CSS)
             this.style.height = this.scrollHeight + 'px';
-        });
-
-        // Add event delegation for reference clicks
-        messages.addEventListener('click', (e) => {
-            if (e.target.classList.contains('ref-link')) {
-                e.preventDefault();
-                const page = parseInt(e.target.dataset.page);
-                if (!isNaN(page)) {
-                    const pdfFrame = document.querySelector('.pdf-frame');
-                    if (pdfFrame) {
-                        // Update PDF viewer to show the referenced page
-                        const currentSrc = pdfFrame.src;
-                        const baseUrl = currentSrc.split('#')[0];
-                        pdfFrame.src = `${baseUrl}#page=${page}&view=Fit`;
-                    }
-                }
-            }
         });
     }
 
-    // Resizer functionality
+    // Resizer functionality as before
     const resizer = document.getElementById('vertical-resizer');
     const pdfViewer = document.querySelector('.pdf-viewer');
     let isResizing = false;
@@ -197,7 +194,6 @@ document.addEventListener('DOMContentLoaded', function() {
             if (!isResizing) return;
             e.preventDefault();
             const dx = e.clientX - startX;
-            // Invert logic so moving left increases width:
             const newWidth = startWidth - dx;
 
             if (newWidth > minWidth && newWidth < maxWidth) {
@@ -226,4 +222,25 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 });
+```
 
+### Explanation of Changes
+
+1. **Spinner on "Send" button:**  
+   We added a `.loading-spinner` span inside the send button in `chat.html`.  
+   In `chat.js`, when a message is sent, we hide the "Send" text and show the spinner by adjusting their `display` properties. Once the response is back, we revert the button to normal state.
+
+2. **Typing simulation:**  
+   Instead of directly inserting the full AI response into the `.ai-message`, we introduced a `simulateTypingEffect(response)` function that:
+   - Creates a `.ai-message` div.
+   - Iterates over each character in `response`.
+   - Appends them one-by-one with a delay (controlled by `speed`).
+   
+   This simulates a "typing" effect for the AI’s response.
+
+### Potential Adjustments
+
+- You may tweak the typing `speed` variable to make the typing appear faster or slower.
+- If the response is large, consider a small optimization like adding characters in batches of a few characters at a time rather than one-by-one to improve performance and realism.
+
+With these changes, the user will see the "Send" button reflect a "thinking" state while waiting for the server's response, and once the response is received, they’ll see the message appear as though it's being typed out character-by-character.

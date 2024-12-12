@@ -19,7 +19,7 @@ print(f"Debug - All environment variables:", list(os.environ.keys()))
 
 from app.db import db, init_db
 from app.routes.main_routes import main
-from app.routes.chat_routes import chat
+from app.routes.chat_routes import chat_bp
 from config import STORAGE_DIR
 import openai
 
@@ -55,6 +55,6 @@ def create_app():
     
     # Register blueprints
     app.register_blueprint(main)
-    app.register_blueprint(chat)
+    app.register_blueprint(chat_bp)
     
     return app
